@@ -1,0 +1,72 @@
+import java.util.*;
+
+class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        long t = sc.nextLong();
+        while (t-- > 0) {
+            Map<Long, Long> frequencyMap = new HashMap<>();
+            long m = sc.nextLong();
+            long n = sc.nextLong();As
+            long count = 0;
+            
+            for (long i = 1; i <= n; i++) {
+                long y = sc.nextLong();
+                frequencyMap.put(y, frequencyMap.getOrDefault(y, 0L) + 1);
+            }
+            
+            long[] prefix = new long[(int) (m + 1)];
+            long[] pprefix = new long[(int) (m + 1)];
+            prefix[1] = n;
+            
+            for (long i = 2; i <= m; i++) {
+                prefix[(int) i] = prefix[(int) (i - 1)] - frequencyMap.getOrDefault(i - 1, 0L);
+            }
+            
+            for (long i = 1; i <= m; i++) {
+                pprefix[(int) i] = prefix[(int) i] + pprefix[(int) (i - 1)];
+            }
+            
+            for (Map.Entry<Long, Long> entry : frequencyMap.entrySet()) {
+                long number = entry.getKey();
+                long frequency = entry.getValue();
+                if (frequency != 0) {
+                    long u1 = 0;
+                    long u = 0;
+                    
+                    for (long p = 1; p <= number; p++) {
+                        long l = m - p;
+                        if (l >= 1) {
+                            if (l <= number) {
+                                u1 += prefix[(int) l] - 1;
+                            } else {
+                                u1 += prefix[(int) l];
+                            }
+                        }
+                    }
+                    
+                    long r = m - 1;
+                    long l = m - number;
+                    if (l == 0) {
+                        l = 1;
+                    }
+                    
+                    if (l <= r) {
+                        u += pprefix[(int) r] - pprefix[(int) (l - 1)];
+                        if (number >= l && number <= r) {
+                            u -= Math.abs(number - l) - 1;
+                        } else if (number > r) {
+                            u -= Math.abs(l - r) - 1;
+                        }
+                    }
+                    
+                    u *= frequency;
+                    count += u;
+                }
+            }
+            
+            System.out.println(count);
+        }
+        sc.close();
+    }
+}

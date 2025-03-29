@@ -1,0 +1,54 @@
+import java.util.*;
+
+class Main {
+    static boolean validate(List<Long> nums) {
+        long size = nums.size();
+        List<Long> diffList = new ArrayList<>();
+        if (size <= 1) {
+            return true;
+        }
+        for (int i = 0; i < size - 1; i++) {
+            long diff = nums.get(i + 1) - nums.get(i);
+            if (diff > 0) {
+                diffList.add(diff);
+            } else {
+                return false;
+            }
+        }
+        return validate(diffList);
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        long testCases = sc.nextLong();
+        while (testCases-- > 0) {
+            int size = sc.nextInt();
+            long[] arr = new long[size + 1];
+            for (int i = 1; i <= size; i++) {
+                arr[i] = sc.nextLong();
+            }
+
+            if (size <= 35) {
+                for (int i = 1; i <= size; i++) {
+                    List<Long> subList = new ArrayList<>();
+                    for (int j = 1; j <= size; j++) {
+                        if (i != j) {
+                            subList.add(arr[j]);
+                        }
+                    }
+                    if (validate(subList)) {
+                        System.out.print("1");
+                    } else {
+                        System.out.print("0");
+                    }
+                }
+            } else {
+                for (int i = 1; i <= size; i++) {
+                    System.out.print("0");
+                }
+            }
+            System.out.println();
+        }
+        sc.close();
+    }
+}
